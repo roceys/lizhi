@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="windowBg">#f5f5f5</color>
+
+    <color name="white">#ffffff</color>
+    <color name="red">#ff0000</color>
+    <color name="yellow">#ffff00</color>
+    <color name="blue">#0000ff</color>
+    <color name="green">#00ff00</color>
+    <color name="orange">#ff5e00</color>
+
+    <color name="transparent">#00000000</color>
+    <color name="translucent">#55555555</color>
+
+    <color name="translucent_2">#22222222</color>
+    <color name="translucent_4">#44444444</color>
+    <color name="translucent_6">#66666666</color>
+    <color name="translucent_8">#88888888</color>
+    <color name="translucent_a">#aaaaaaaa</color>
+    <color name="translucent_c">#cccccccc</color>
+    <color name="translucent_e">#eeeeeeee</color>
+
+    <color name="black">#000000</color>
+    <color name="color_1">#111111</color>
+    <color name="color_2">#222222</color>
+    <color name="color_3">#333333</color>
+    <color name="color_4">#444444</color>
+    <color name="color_5">#555555</color>
+    <color name="color_6">#666666</color>
+    <color name="color_7">#777777</color>
+    <color name="color_8">#888888</color>
+    <color name="color_9">#999999</color>
+    <color name="color_a">#aaaaaa</color>
+    <color name="color_b">#bbbbbb</color>
+    <color name="color_c">#cccccc</color>
+    <color name="color_d">#dddddd</color>
+    <color name="color_e">#eeeeee</color>
+
+    <color name="normal">@color/color_a</color>
+</resources>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/windowBg"
+    tools:context=".SplashActivity">
+
+    <ImageView
+        android:id="@+id/iv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitXY" />
+
+    <ren.perry.lizhi.view.CountDownProgressView
+        android:id="@+id/progressView"
+        android:layout_width="@dimen/dp_38"
+        android:layout_height="@dimen/dp_38"
+        android:layout_alignParentEnd="true"
+        android:layout_margin="@dimen/dp_16"
+        android:clickable="true"
+        android:focusable="true"
+        app:circFrameColor="@color/transparent"
+        app:circSolidColor="@color/translucent_6"
+        app:progressColor="@color/white"
+        app:textColor="@color/white" />
+
+</RelativeLayout>
