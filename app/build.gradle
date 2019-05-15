@@ -88,4 +88,7 @@ dependencies {
     implementation 'com.tbruyelle.rxpermissions:rxpermissions:0.9.4@aar'    //动态权限请求
     implementation 'com.allenliu.versionchecklib:library:2.1.9'             //版本更新库
     implementation 'com.orhanobut:logger:2.2.0'                             //日志打印
+
+    implementation 'com.youth.banner:banner:1.4.10'                         //轮播图控件
+    implementation 'com.just.agentweb:agentweb:4.0.3-alpha@aar'             //WebView
 }

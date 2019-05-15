@@ -11,6 +11,8 @@ public interface Constants {
 
     interface App {
         boolean isDebug = BuildConfig.DEBUG;
+        String appId = BuildConfig.APPLICATION_ID;
+        int versionCode = BuildConfig.VERSION_CODE;
     }
 
     interface Api {

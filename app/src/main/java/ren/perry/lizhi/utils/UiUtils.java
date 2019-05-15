@@ -78,6 +78,19 @@ public class UiUtils {
         }
     }
 
+    public static View getRvMsgView(String msg) {
+        return getRvMsgView(msg, R.mipmap.empty_data);
+    }
+
+    public static View getRvMsgView(String msg, int imgResId) {
+        View view = getView(R.layout.view_rv_msg_view);
+        TextView tvMsg = view.findViewById(R.id.tvMsg);
+        ImageView iv = view.findViewById(R.id.imageView);
+        tvMsg.setText(msg);
+        iv.setImageResource(imgResId);
+        return view;
+    }
+
     /**
      * 将px值转换为dip或dp值，保证尺寸大小不变（DisplayMetrics类中属性density）
      */

@@ -37,6 +37,10 @@
             android:name=".SplashActivity"
             android:label="@string/SplashActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.BrowserActivity"
+            android:label="@string/BrowserActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

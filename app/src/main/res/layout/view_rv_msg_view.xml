@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/windowBg"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <View
+        android:layout_width="@dimen/px_1"
+        android:layout_height="@dimen/dp_0"
+        android:layout_weight="0.2" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:adjustViewBounds="true"
+        android:contentDescription="@string/app_name"
+        android:scaleType="fitCenter"
+        android:src="@mipmap/empty_data" />
+
+    <TextView
+        android:id="@+id/tvMsg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:text="啊噢~没有获取到数据诶"
+        android:textColor="@color/color_9"
+        android:textSize="@dimen/sp_16" />
+
+    <View
+        android:layout_width="@dimen/px_1"
+        android:layout_height="@dimen/dp_0"
+        android:layout_weight="0.8" />
+
+</LinearLayout>
