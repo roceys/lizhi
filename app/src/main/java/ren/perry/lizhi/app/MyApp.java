@@ -7,6 +7,9 @@ import com.orhanobut.logger.FormatStrategy;
 import com.orhanobut.logger.Logger;
 import com.orhanobut.logger.PrettyFormatStrategy;
 
+import org.greenrobot.greendao.query.QueryBuilder;
+
+import ren.perry.lizhi.dao.DaoManager;
 import ren.perry.mvplibrary.BaseMvpApplication;
 
 /**
@@ -21,6 +24,18 @@ public class MyApp extends BaseMvpApplication {
         super.onCreate();
         initNetworkTimeout();
         initLogger();
+        initGreenDao();
+    }
+
+    /**
+     * 初始化SQLite数据库
+     */
+    private void initGreenDao() {
+        DaoManager.get().init(this);
+        if (Constants.App.isDebug) {
+            QueryBuilder.LOG_SQL = true;
+            QueryBuilder.LOG_VALUES = true;
+        }
     }
 
     /**

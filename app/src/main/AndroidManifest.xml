@@ -41,6 +41,10 @@
             android:name=".ui.BrowserActivity"
             android:label="@string/BrowserActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.MusicActivity"
+            android:label="@string/AlbumDetailActivity"
+            android:screenOrientation="portrait" />
 
     </application>
 

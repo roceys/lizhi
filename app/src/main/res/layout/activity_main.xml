@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,7 +8,8 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@id/llBar">
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
@@ -55,6 +56,79 @@
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+    <RelativeLayout
+        android:id="@+id/llBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@color/white"
+        android:padding="@dimen/dp_8">
+
+        <ImageView
+            android:id="@+id/ivBar"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/default_cover" />
+
+        <TextView
+            android:id="@+id/tvBarTop"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/ivBar"
+            android:layout_toEndOf="@id/ivBar"
+            android:paddingStart="@dimen/dp_8"
+            android:paddingEnd="@dimen/dp_8"
+            android:text="歌曲"
+            android:textColor="@color/color_3"
+            android:textSize="@dimen/sp_14" />
+
+        <TextView
+            android:id="@+id/tvBarBottom"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/ivBar"
+            android:layout_toEndOf="@id/ivBar"
+            android:paddingStart="@dimen/dp_8"
+            android:paddingEnd="@dimen/dp_8"
+            android:text="歌手"
+            android:textColor="@color/color_8"
+            android:textSize="@dimen/sp_12" />
+
+        <ImageButton
+            android:id="@+id/ibBarPlay"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/ibBarList"
+            android:background="?android:attr/actionBarItemBackground"
+            android:clickable="true"
+            android:contentDescription="@string/app_name"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/play_bar_btn_play_pause_selector" />
+
+        <ImageButton
+            android:id="@+id/ibBarList"
+            android:layout_width="@dimen/dp_40"
+            android:layout_height="@dimen/dp_40"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="?android:attr/actionBarItemBackground"
+            android:clickable="true"
+            android:contentDescription="@string/app_name"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_play_bar_btn_playlist" />
+
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/pbBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/dp_1"
+        android:layout_alignParentBottom="true" />
+
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar1"
         android:layout_width="match_parent"
@@ -63,4 +137,4 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:layout_collapseMode="pin" />
 
-</FrameLayout>
+</RelativeLayout>

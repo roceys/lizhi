@@ -2,4 +2,5 @@
     <string name="MainActivity">主页面</string>
     <string name="SplashActivity">闪屏页</string>
     <string name="BrowserActivity">Web页</string>
+    <string name="AlbumDetailActivity">歌单</string>
 </resources>

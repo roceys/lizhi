@@ -1,41 +1,60 @@
 package ren.perry.lizhi.ui;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.gyf.barlibrary.ImmersionBar;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 import ren.perry.lizhi.R;
-import ren.perry.lizhi.adapter.AlbumRvAdapter;
-import ren.perry.lizhi.bean.AlbumBean;
-import ren.perry.lizhi.mvp.contract.AlbumContract;
-import ren.perry.lizhi.mvp.presenter.AlbumPresenter;
+import ren.perry.lizhi.adapter.MusicRvAdapter;
+import ren.perry.lizhi.bean.MusicBean;
+import ren.perry.lizhi.mvp.contract.MusicContract;
+import ren.perry.lizhi.mvp.presenter.MusicPresenter;
 import ren.perry.lizhi.utils.UiUtils;
-import ren.perry.mvplibrary.base.BaseFragment;
+import ren.perry.mvplibrary.base.BaseActivity;
 import ren.perry.mvplibrary.net.ApiException;
+import ren.perry.mvplibrary.utils.GlideMan;
 
 /**
- * 歌单
- *
  * @author perrywe
- * @date 2019-05-15
+ * @date 2019-05-16
  * WeChat  917351143
  */
-public class AlbumFragment extends BaseFragment<AlbumPresenter>
-        implements AlbumContract.View, BaseQuickAdapter.OnItemChildClickListener {
+public class MusicActivity extends BaseActivity<MusicPresenter>
+        implements MusicContract.View, BaseQuickAdapter.OnItemChildClickListener {
 
+    public static final String KEY_ALBUM_NAME = "KEY_ALBUM_NAME";   //专辑名称
+    public static final String KEY_ALBUM_ID = "KEY_ALBUM_ID";       //专辑ID
+    public static final String KEY_ALBUM_IMG = "KEY_ALBUM_IMG";     //专辑图片
+
+    private int mId;
+
+    @BindView(R.id.imageView)
+    ImageView imageView;
+    @BindView(R.id.toolbar)
+    Toolbar toolbar;
+    @BindView(R.id.collapsingToolbarLayout)
+    CollapsingToolbarLayout collapsingToolbarLayout;
     @BindView(R.id.recyclerView)
     RecyclerView recyclerView;
     @BindView(R.id.refreshLayout)
     SwipeRefreshLayout refreshLayout;
+    @BindView(R.id.tvCount)
+    TextView tvCount;
     @BindView(R.id.fabTop)
     FloatingActionButton fabTop;
 
@@ -43,27 +62,46 @@ public class AlbumFragment extends BaseFragment<AlbumPresenter>
     private boolean isLoadMore = false;
     private int lastPosition;
     private final int visibleFabPosition = 6;
-    private int requestCount = 21;
+    private int requestCount = 20;
 
-    private AlbumRvAdapter rvAdapter;
+    private MusicRvAdapter rvAdapter;
 
-
-    static Fragment getInstance() {
-        return new AlbumFragment();
+    public static void start(Activity activity, String name, int id, String img) {
+        Intent intent = new Intent(activity, MusicActivity.class);
+        intent.putExtra(KEY_ALBUM_NAME, name);
+        intent.putExtra(KEY_ALBUM_ID, id);
+        intent.putExtra(KEY_ALBUM_IMG, img);
+        activity.startActivity(intent);
     }
 
     @Override
     protected int initLayoutId() {
-        return R.layout.fragment_album;
-    }
-
-    @Override
-    protected AlbumPresenter onCreatePresenter() {
-        return new AlbumPresenter(this);
+        return R.layout.activity_music;
     }
 
     @Override
     protected void initView() {
+        mId = getIntent().getIntExtra(KEY_ALBUM_ID, 0);
+        String mName = getIntent().getStringExtra(KEY_ALBUM_NAME);
+        String mImg = getIntent().getStringExtra(KEY_ALBUM_IMG);
+
+//        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
+//        lp.width = UiUtils.getScreenWidth();
+//        lp.height = UiUtils.getScreenWidth();
+//        imageView.setLayoutParams(lp);
+
+        new GlideMan.Builder().load(mImg).into(imageView);
+
+        UiUtils.setMargin(toolbar, 0, ImmersionBar.getStatusBarHeight(this), 0, 0);
+
+        toolbar.setNavigationOnClickListener(v -> onBackPressed());
+
+        setTitle(mName);
+        collapsingToolbarLayout.setTitle(mName);
+        //设置收缩前字体颜色
+        collapsingToolbarLayout.setExpandedTitleColor(UiUtils.getColor(R.color.white));
+        //设置收缩后字体颜色
+        collapsingToolbarLayout.setCollapsedTitleTextColor(UiUtils.getColor(R.color.white));
 
         //初始化刷新控件
         refreshLayout.setColorSchemeResources(R.color.app_color, R.color.app_color_dark, R.color.app_color_accent);
@@ -73,9 +111,9 @@ public class AlbumFragment extends BaseFragment<AlbumPresenter>
         });
 
         //初始化RecyclerView
-        GridLayoutManager lm = new GridLayoutManager(activity, 3);
+        LinearLayoutManager lm = new LinearLayoutManager(this);
         lm.setOrientation(RecyclerView.VERTICAL);
-        rvAdapter = new AlbumRvAdapter(lm);
+        rvAdapter = new MusicRvAdapter(mName);
         rvAdapter.bindToRecyclerView(recyclerView);
         rvAdapter.setOnItemChildClickListener(this);
         rvAdapter.setEnableLoadMore(true);
@@ -100,17 +138,23 @@ public class AlbumFragment extends BaseFragment<AlbumPresenter>
                 lastPosition = position;
             }
         });
+        refreshLayout.post(() -> {
+            refreshLayout.setRefreshing(true);
+            fetchData();
+        });
+    }
 
-        refreshLayout.post(() -> refreshLayout.setRefreshing(true));
+    private void fetchData() {
+        mPresenter.music(mId, requestCount, pageCount);
     }
 
     @Override
-    protected void fetchData() {
-        mPresenter.album(requestCount, pageCount);
+    protected MusicPresenter onCreatePresenter() {
+        return new MusicPresenter(this);
     }
 
     @Override
-    public void onAlbumSuccess(AlbumBean bean) {
+    public void onMusicSuccess(MusicBean bean) {
         refreshLayout.setRefreshing(false);
         if (bean.getCode() == 1) {
             if (isLoadMore) {
@@ -125,6 +169,8 @@ public class AlbumFragment extends BaseFragment<AlbumPresenter>
                     rvAdapter.loadMoreEnd();
                 }
             } else {
+                String countStr = "共" + bean.getData().getCount() + "首";
+                tvCount.setText(countStr);
                 if (bean.getData().getList().size() >= 1) {
                     rvAdapter.setNewData(bean.getData().getList());
                     if (bean.getData().getList().size() < requestCount) {
@@ -145,10 +191,11 @@ public class AlbumFragment extends BaseFragment<AlbumPresenter>
                 rvAdapter.setEmptyView(UiUtils.getRvMsgView(bean.getMsg()));
             }
         }
+
     }
 
     @Override
-    public void onAlbumError(ApiException.ResponseException e) {
+    public void onMusicError(ApiException.ResponseException e) {
         refreshLayout.setRefreshing(false);
         if (isLoadMore) {
             isLoadMore = false;
@@ -160,17 +207,19 @@ public class AlbumFragment extends BaseFragment<AlbumPresenter>
         }
     }
 
-    @OnClick(R.id.fabTop)
-    void onViewClicked() {
-        recyclerView.smoothScrollToPosition(0);
-    }
-
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
-        AlbumBean.DataBean.ListBean bean = (AlbumBean.DataBean.ListBean) adapter.getData().get(position);
-        if (view.getId() == R.id.cv) {
-            MusicActivity.start(activity, bean.getName(), bean.getId(), bean.getImg());
-        }
 
+    }
+
+    @OnClick({R.id.llPlayAll, R.id.fabTop})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.llPlayAll:
+                break;
+            case R.id.fabTop:
+                recyclerView.smoothScrollToPosition(0);
+                break;
+        }
     }
 }

@@ -2,6 +2,7 @@ package ren.perry.lizhi.api;
 
 import ren.perry.lizhi.bean.AlbumBean;
 import ren.perry.lizhi.bean.BannerBean;
+import ren.perry.lizhi.bean.MusicBean;
 import ren.perry.lizhi.bean.SplashBean;
 import ren.perry.lizhi.bean.VersionBean;
 import retrofit2.http.Field;
@@ -29,6 +30,12 @@ public interface ApiService {
     @POST("/lizhi/album")
     @FormUrlEncoded
     Observable<AlbumBean> album(@Field("size") int size,
+                                @Field("page") int page);
+
+    @POST("/lizhi/music")
+    @FormUrlEncoded
+    Observable<MusicBean> music(@Field("albumId") int albumId,
+                                @Field("size") int size,
                                 @Field("page") int page);
 
 }

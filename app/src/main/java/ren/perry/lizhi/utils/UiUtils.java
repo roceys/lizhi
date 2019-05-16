@@ -1,6 +1,5 @@
 package ren.perry.lizhi.utils;
 
-import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,18 +16,12 @@ import ren.perry.lizhi.app.MyApp;
 
 public class UiUtils {
 
-    //屏幕缩放比率
-    public static final int SCREEN_WIDTH;
-    public static final int SCREEN_HEIGHT;
-    public static final float SCALE_X;
-    public static final float SCALE_Y;
+    public static int getScreenWidth() {
+        return MyApp.getContext().getResources().getDisplayMetrics().widthPixels;
+    }
 
-    static {
-        Resources resources = MyApp.getContext().getResources();
-        SCREEN_WIDTH = resources.getDisplayMetrics().widthPixels;
-        SCREEN_HEIGHT = resources.getDisplayMetrics().heightPixels;
-        SCALE_X = SCREEN_WIDTH / 640.0f;
-        SCALE_Y = SCREEN_HEIGHT / 1136.0f;
+    public static int getScreenHeight() {
+        return MyApp.getContext().getResources().getDisplayMetrics().heightPixels;
     }
 
     public static int getColor(int id) {

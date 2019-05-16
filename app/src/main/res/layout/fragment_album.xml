@@ -26,6 +26,7 @@
         android:layout_alignParentBottom="true"
         android:layout_margin="@dimen/dp_16"
         android:src="@drawable/ic_arrow_upward_black_24dp"
+        android:visibility="gone"
         app:fabSize="mini" />
 
 </RelativeLayout>
