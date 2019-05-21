@@ -6,9 +6,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
-        android:name=".app.MyApp"
+        android:name="ren.perry.lizhi.app.MyApp"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -18,7 +22,7 @@
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
 
         <activity
-            android:name=".StartActivity"
+            android:name="ren.perry.lizhi.StartActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Splash">
@@ -30,22 +34,37 @@
         </activity>
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name="ren.perry.lizhi.ui.MainActivity"
             android:label="@string/MainActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".SplashActivity"
+            android:name="ren.perry.lizhi.SplashActivity"
             android:label="@string/SplashActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.BrowserActivity"
+            android:name="ren.perry.lizhi.ui.BrowserActivity"
             android:label="@string/BrowserActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.MusicActivity"
+            android:name="ren.perry.lizhi.ui.MusicActivity"
             android:label="@string/AlbumDetailActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.PlayListActivity"
+            android:label="@string/PlayListActivity"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".ui.PlayerActivity"
+            android:label="@string/PlayerActivity"
+            android:screenOrientation="portrait" />
 
+        <service android:name="ren.perry.lizhi.service.PlayService" />
+
+        <receiver android:name=".receiver.MusicIntentReceiver">
+            <intent-filter>
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

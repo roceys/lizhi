@@ -35,6 +35,8 @@ public class AlbumRvAdapter extends BaseQuickAdapter<AlbumBean.DataBean.ListBean
 
         new GlideMan.Builder()
                 .load(item.getImg())
+                .loadingRes(R.mipmap.default_album)
+                .loadFailRes(R.mipmap.default_album)
                 .into(iv);
 
         helper.setText(R.id.tv, item.getName())

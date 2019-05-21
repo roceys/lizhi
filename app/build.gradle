@@ -65,7 +65,7 @@ android {
             applicationId "ren.perry.lizhi.beta"
             resValue "string", "app_name", "我爱南京Beta"
             buildConfigField 'String', 'SERVER_URL', '"http://ngrok.perry.ren:27020"'
-            buildConfigField 'String', 'SERVER_MODULE', '"/lizhi"'
+            buildConfigField 'String', 'SERVER_MODULE', '"/"'
         }
 
         perry {
@@ -73,8 +73,8 @@ android {
             versionName "1.0"
             applicationId "ren.perry.lizhi"
             resValue "string", "app_name", "我爱南京"
-            buildConfigField 'String', 'SERVER_URL', '"https://lizhi.perry.ren"'
-            buildConfigField 'String', 'SERVER_MODULE', '"/lizhi"'
+            buildConfigField 'String', 'SERVER_URL', '"https://lz.perry.ren"'
+            buildConfigField 'String', 'SERVER_MODULE', '"/api/lz"'
         }
     }
 }

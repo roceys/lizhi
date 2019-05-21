@@ -5,6 +5,7 @@ import android.widget.ImageView;
 
 import com.youth.banner.loader.ImageLoader;
 
+import ren.perry.lizhi.R;
 import ren.perry.mvplibrary.utils.GlideMan;
 
 /**
@@ -23,8 +24,8 @@ public class GlideImageLoader extends ImageLoader {
         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         new GlideMan.Builder()
                 .load(url)
-//                .loadingRes(R.mipmap.default_rectangle)
-//                .loadFailRes(R.mipmap.default_rectangle)
+                .loadingRes(R.mipmap.default_banner)
+                .loadFailRes(R.mipmap.default_banner)
                 .into(imageView);
     }
 }

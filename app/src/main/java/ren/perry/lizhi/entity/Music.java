@@ -1,9 +1,9 @@
 package ren.perry.lizhi.entity;
 
 import org.greenrobot.greendao.annotation.Entity;
+import org.greenrobot.greendao.annotation.Generated;
 import org.greenrobot.greendao.annotation.Id;
 import org.greenrobot.greendao.annotation.Property;
-import org.greenrobot.greendao.annotation.Generated;
 
 /**
  * @author perrywe
@@ -16,6 +16,9 @@ public class Music {
     @Id
     private Long id;
 
+    @Property(nameInDb = "m_id")
+    private int m_id;
+
     @Property(nameInDb = "name")
     private String name;
 
@@ -24,6 +27,12 @@ public class Music {
 
     @Property(nameInDb = "pic")
     private String pic;
+
+    @Property(nameInDb = "album")
+    private String album;
+
+    @Property(nameInDb = "album_pic")
+    private String album_pic;
 
     @Property(nameInDb = "singer")
     private String singer;
@@ -34,13 +43,16 @@ public class Music {
     @Property(nameInDb = "add_time")
     private long add_time;
 
-    @Generated(hash = 1446613876)
-    public Music(Long id, String name, String url, String pic, String singer,
-            String create_time, long add_time) {
+    @Generated(hash = 481097759)
+    public Music(Long id, int m_id, String name, String url, String pic, String album,
+            String album_pic, String singer, String create_time, long add_time) {
         this.id = id;
+        this.m_id = m_id;
         this.name = name;
         this.url = url;
         this.pic = pic;
+        this.album = album;
+        this.album_pic = album_pic;
         this.singer = singer;
         this.create_time = create_time;
         this.add_time = add_time;
@@ -104,5 +116,29 @@ public class Music {
 
     public void setAdd_time(long add_time) {
         this.add_time = add_time;
+    }
+
+    public String getAlbum() {
+        return this.album;
+    }
+
+    public void setAlbum(String album) {
+        this.album = album;
+    }
+
+    public String getAlbum_pic() {
+        return this.album_pic;
+    }
+
+    public void setAlbum_pic(String album_pic) {
+        this.album_pic = album_pic;
+    }
+
+    public int getM_id() {
+        return this.m_id;
+    }
+
+    public void setM_id(int m_id) {
+        this.m_id = m_id;
     }
 }

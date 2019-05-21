@@ -3,4 +3,6 @@
     <string name="SplashActivity">闪屏页</string>
     <string name="BrowserActivity">Web页</string>
     <string name="AlbumDetailActivity">歌单</string>
+    <string name="PlayListActivity">播放列表</string>
+    <string name="PlayerActivity">播放器</string>
 </resources>

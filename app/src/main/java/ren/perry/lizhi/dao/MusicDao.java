@@ -25,12 +25,15 @@ public class MusicDao extends AbstractDao<Music, Long> {
      */
     public static class Properties {
         public final static Property Id = new Property(0, Long.class, "id", true, "_id");
-        public final static Property Name = new Property(1, String.class, "name", false, "name");
-        public final static Property Url = new Property(2, String.class, "url", false, "url");
-        public final static Property Pic = new Property(3, String.class, "pic", false, "pic");
-        public final static Property Singer = new Property(4, String.class, "singer", false, "singer");
-        public final static Property Create_time = new Property(5, String.class, "create_time", false, "create_time");
-        public final static Property Add_time = new Property(6, long.class, "add_time", false, "add_time");
+        public final static Property M_id = new Property(1, int.class, "m_id", false, "m_id");
+        public final static Property Name = new Property(2, String.class, "name", false, "name");
+        public final static Property Url = new Property(3, String.class, "url", false, "url");
+        public final static Property Pic = new Property(4, String.class, "pic", false, "pic");
+        public final static Property Album = new Property(5, String.class, "album", false, "album");
+        public final static Property Album_pic = new Property(6, String.class, "album_pic", false, "album_pic");
+        public final static Property Singer = new Property(7, String.class, "singer", false, "singer");
+        public final static Property Create_time = new Property(8, String.class, "create_time", false, "create_time");
+        public final static Property Add_time = new Property(9, long.class, "add_time", false, "add_time");
     }
 
 
@@ -47,12 +50,15 @@ public class MusicDao extends AbstractDao<Music, Long> {
         String constraint = ifNotExists? "IF NOT EXISTS ": "";
         db.execSQL("CREATE TABLE " + constraint + "\"MUSIC\" (" + //
                 "\"_id\" INTEGER PRIMARY KEY ," + // 0: id
-                "\"name\" TEXT," + // 1: name
-                "\"url\" TEXT," + // 2: url
-                "\"pic\" TEXT," + // 3: pic
-                "\"singer\" TEXT," + // 4: singer
-                "\"create_time\" TEXT," + // 5: create_time
-                "\"add_time\" INTEGER NOT NULL );"); // 6: add_time
+                "\"m_id\" INTEGER NOT NULL ," + // 1: m_id
+                "\"name\" TEXT," + // 2: name
+                "\"url\" TEXT," + // 3: url
+                "\"pic\" TEXT," + // 4: pic
+                "\"album\" TEXT," + // 5: album
+                "\"album_pic\" TEXT," + // 6: album_pic
+                "\"singer\" TEXT," + // 7: singer
+                "\"create_time\" TEXT," + // 8: create_time
+                "\"add_time\" INTEGER NOT NULL );"); // 9: add_time
     }
 
     /** Drops the underlying database table. */
@@ -69,32 +75,43 @@ public class MusicDao extends AbstractDao<Music, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
+        stmt.bindLong(2, entity.getM_id());
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
  
         String url = entity.getUrl();
         if (url != null) {
-            stmt.bindString(3, url);
+            stmt.bindString(4, url);
         }
  
         String pic = entity.getPic();
         if (pic != null) {
-            stmt.bindString(4, pic);
+            stmt.bindString(5, pic);
+        }
+ 
+        String album = entity.getAlbum();
+        if (album != null) {
+            stmt.bindString(6, album);
+        }
+ 
+        String album_pic = entity.getAlbum_pic();
+        if (album_pic != null) {
+            stmt.bindString(7, album_pic);
         }
  
         String singer = entity.getSinger();
         if (singer != null) {
-            stmt.bindString(5, singer);
+            stmt.bindString(8, singer);
         }
  
         String create_time = entity.getCreate_time();
         if (create_time != null) {
-            stmt.bindString(6, create_time);
+            stmt.bindString(9, create_time);
         }
-        stmt.bindLong(7, entity.getAdd_time());
+        stmt.bindLong(10, entity.getAdd_time());
     }
 
     @Override
@@ -105,32 +122,43 @@ public class MusicDao extends AbstractDao<Music, Long> {
         if (id != null) {
             stmt.bindLong(1, id);
         }
+        stmt.bindLong(2, entity.getM_id());
  
         String name = entity.getName();
         if (name != null) {
-            stmt.bindString(2, name);
+            stmt.bindString(3, name);
         }
  
         String url = entity.getUrl();
         if (url != null) {
-            stmt.bindString(3, url);
+            stmt.bindString(4, url);
         }
  
         String pic = entity.getPic();
         if (pic != null) {
-            stmt.bindString(4, pic);
+            stmt.bindString(5, pic);
+        }
+ 
+        String album = entity.getAlbum();
+        if (album != null) {
+            stmt.bindString(6, album);
+        }
+ 
+        String album_pic = entity.getAlbum_pic();
+        if (album_pic != null) {
+            stmt.bindString(7, album_pic);
         }
  
         String singer = entity.getSinger();
         if (singer != null) {
-            stmt.bindString(5, singer);
+            stmt.bindString(8, singer);
         }
  
         String create_time = entity.getCreate_time();
         if (create_time != null) {
-            stmt.bindString(6, create_time);
+            stmt.bindString(9, create_time);
         }
-        stmt.bindLong(7, entity.getAdd_time());
+        stmt.bindLong(10, entity.getAdd_time());
     }
 
     @Override
@@ -142,12 +170,15 @@ public class MusicDao extends AbstractDao<Music, Long> {
     public Music readEntity(Cursor cursor, int offset) {
         Music entity = new Music( //
             cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0), // id
-            cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1), // name
-            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // url
-            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // pic
-            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // singer
-            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // create_time
-            cursor.getLong(offset + 6) // add_time
+            cursor.getInt(offset + 1), // m_id
+            cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2), // name
+            cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3), // url
+            cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4), // pic
+            cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5), // album
+            cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6), // album_pic
+            cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7), // singer
+            cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8), // create_time
+            cursor.getLong(offset + 9) // add_time
         );
         return entity;
     }
@@ -155,12 +186,15 @@ public class MusicDao extends AbstractDao<Music, Long> {
     @Override
     public void readEntity(Cursor cursor, Music entity, int offset) {
         entity.setId(cursor.isNull(offset + 0) ? null : cursor.getLong(offset + 0));
-        entity.setName(cursor.isNull(offset + 1) ? null : cursor.getString(offset + 1));
-        entity.setUrl(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
-        entity.setPic(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
-        entity.setSinger(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
-        entity.setCreate_time(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
-        entity.setAdd_time(cursor.getLong(offset + 6));
+        entity.setM_id(cursor.getInt(offset + 1));
+        entity.setName(cursor.isNull(offset + 2) ? null : cursor.getString(offset + 2));
+        entity.setUrl(cursor.isNull(offset + 3) ? null : cursor.getString(offset + 3));
+        entity.setPic(cursor.isNull(offset + 4) ? null : cursor.getString(offset + 4));
+        entity.setAlbum(cursor.isNull(offset + 5) ? null : cursor.getString(offset + 5));
+        entity.setAlbum_pic(cursor.isNull(offset + 6) ? null : cursor.getString(offset + 6));
+        entity.setSinger(cursor.isNull(offset + 7) ? null : cursor.getString(offset + 7));
+        entity.setCreate_time(cursor.isNull(offset + 8) ? null : cursor.getString(offset + 8));
+        entity.setAdd_time(cursor.getLong(offset + 9));
      }
     
     @Override

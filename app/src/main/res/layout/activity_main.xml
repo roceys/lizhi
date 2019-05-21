@@ -25,7 +25,8 @@
                 <com.youth.banner.Banner
                     android:id="@+id/bannerView"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/banner_height_advisory" />
+                    android:layout_height="@dimen/banner_height_advisory"
+                    android:background="@mipmap/default_banner_bg" />
 
                 <androidx.appcompat.widget.Toolbar
                     android:id="@+id/toolbar"
@@ -76,10 +77,13 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignTop="@id/ivBar"
+            android:layout_toStartOf="@id/ibBarPlay"
             android:layout_toEndOf="@id/ivBar"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:paddingStart="@dimen/dp_8"
             android:paddingEnd="@dimen/dp_8"
-            android:text="歌曲"
+            android:text="无音乐"
             android:textColor="@color/color_3"
             android:textSize="@dimen/sp_14" />
 
@@ -88,15 +92,31 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@id/ivBar"
+            android:layout_toStartOf="@id/ibBarPlay"
             android:layout_toEndOf="@id/ivBar"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:paddingStart="@dimen/dp_8"
             android:paddingEnd="@dimen/dp_8"
-            android:text="歌手"
+            android:text="当前没有要播放的音乐"
             android:textColor="@color/color_8"
             android:textSize="@dimen/sp_12" />
 
         <ImageButton
             android:id="@+id/ibBarPlay"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_centerVertical="true"
+            android:layout_toStartOf="@id/ibBarNext"
+            android:background="?android:attr/actionBarItemBackground"
+            android:clickable="true"
+            android:contentDescription="@string/app_name"
+            android:focusable="true"
+            android:scaleType="fitCenter"
+            android:src="@drawable/play_bar_btn_play_pause_selector" />
+
+        <ImageButton
+            android:id="@+id/ibBarNext"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_centerVertical="true"
@@ -106,7 +126,7 @@
             android:contentDescription="@string/app_name"
             android:focusable="true"
             android:scaleType="fitCenter"
-            android:src="@drawable/play_bar_btn_play_pause_selector" />
+            android:src="@drawable/ic_play_bar_btn_next" />
 
         <ImageButton
             android:id="@+id/ibBarList"
@@ -125,7 +145,9 @@
 
     <ProgressBar
         android:id="@+id/pbBar"
+        style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="match_parent"
+        android:progressDrawable="@drawable/progress_bar_style"
         android:layout_height="@dimen/dp_1"
         android:layout_alignParentBottom="true" />
 

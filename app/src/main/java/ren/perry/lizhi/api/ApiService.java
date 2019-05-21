@@ -1,5 +1,6 @@
 package ren.perry.lizhi.api;
 
+import ren.perry.lizhi.app.Constants;
 import ren.perry.lizhi.bean.AlbumBean;
 import ren.perry.lizhi.bean.BannerBean;
 import ren.perry.lizhi.bean.MusicBean;
@@ -17,22 +18,22 @@ import rx.Observable;
  */
 public interface ApiService {
 
-    @POST("/lizhi/splash")
+    @POST(Constants.Api.module + "/splash")
     Observable<SplashBean> splash();
 
-    @POST("/lizhi/version")
+    @POST(Constants.Api.module + "/version")
     @FormUrlEncoded
     Observable<VersionBean> version(@Field("appId") String appId);
 
-    @POST("/lizhi/banner")
+    @POST(Constants.Api.module + "/banner")
     Observable<BannerBean> banner();
 
-    @POST("/lizhi/album")
+    @POST(Constants.Api.module + "/album")
     @FormUrlEncoded
     Observable<AlbumBean> album(@Field("size") int size,
                                 @Field("page") int page);
 
-    @POST("/lizhi/music")
+    @POST(Constants.Api.module + "/music")
     @FormUrlEncoded
     Observable<MusicBean> music(@Field("albumId") int albumId,
                                 @Field("size") int size,

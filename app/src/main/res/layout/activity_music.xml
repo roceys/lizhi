@@ -32,7 +32,7 @@
                     android:adjustViewBounds="true"
                     android:contentDescription="@string/app_name"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/default_cover" />
+                    android:src="@mipmap/default_banner" />
 
             </LinearLayout>
 

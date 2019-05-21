@@ -17,13 +17,23 @@ import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.gyf.barlibrary.ImmersionBar;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 import ren.perry.lizhi.R;
 import ren.perry.lizhi.adapter.MusicRvAdapter;
 import ren.perry.lizhi.bean.MusicBean;
+import ren.perry.lizhi.entity.Music;
+import ren.perry.lizhi.event.PlayActionEvent;
+import ren.perry.lizhi.helper.AudioPlayer;
 import ren.perry.lizhi.mvp.contract.MusicContract;
 import ren.perry.lizhi.mvp.presenter.MusicPresenter;
+import ren.perry.lizhi.utils.DateUtils;
 import ren.perry.lizhi.utils.UiUtils;
 import ren.perry.mvplibrary.base.BaseActivity;
 import ren.perry.mvplibrary.net.ApiException;
@@ -65,6 +75,32 @@ public class MusicActivity extends BaseActivity<MusicPresenter>
     private int requestCount = 20;
 
     private MusicRvAdapter rvAdapter;
+    private String mAlbumName;
+    private String mAlbumImg;
+
+    @Subscribe
+    public void onPlayEvent(PlayActionEvent event) {
+        switch (event.getAction()) {
+            case PlayActionEvent.ACTION_PLAY_ADD:           //播放新添加的
+                rvAdapter.notifyDataSetChanged();
+                break;
+            case PlayActionEvent.ACTION_PLAY_LIST:          //播放从播放列表里点击的
+                rvAdapter.notifyDataSetChanged();
+                break;
+            case PlayActionEvent.ACTION_PLAY_PAUSE:         //暂停后的播放
+                break;
+            case PlayActionEvent.ACTION_PLAY_NEXT:          //下一曲
+                rvAdapter.notifyDataSetChanged();
+                break;
+            case PlayActionEvent.ACTION_PLAY_PREV:          //上一曲
+                rvAdapter.notifyDataSetChanged();
+                break;
+            case PlayActionEvent.ACTION_PAUSE:              //暂停
+                break;
+            case PlayActionEvent.ACTION_STOP:               //停止
+                break;
+        }
+    }
 
     public static void start(Activity activity, String name, int id, String img) {
         Intent intent = new Intent(activity, MusicActivity.class);
@@ -81,23 +117,19 @@ public class MusicActivity extends BaseActivity<MusicPresenter>
 
     @Override
     protected void initView() {
+        EventBus.getDefault().register(this);
         mId = getIntent().getIntExtra(KEY_ALBUM_ID, 0);
-        String mName = getIntent().getStringExtra(KEY_ALBUM_NAME);
-        String mImg = getIntent().getStringExtra(KEY_ALBUM_IMG);
+        mAlbumName = getIntent().getStringExtra(KEY_ALBUM_NAME);
+        mAlbumImg = getIntent().getStringExtra(KEY_ALBUM_IMG);
 
-//        ViewGroup.LayoutParams lp = imageView.getLayoutParams();
-//        lp.width = UiUtils.getScreenWidth();
-//        lp.height = UiUtils.getScreenWidth();
-//        imageView.setLayoutParams(lp);
-
-        new GlideMan.Builder().load(mImg).into(imageView);
+        new GlideMan.Builder().load(mAlbumImg).into(imageView);
 
         UiUtils.setMargin(toolbar, 0, ImmersionBar.getStatusBarHeight(this), 0, 0);
 
         toolbar.setNavigationOnClickListener(v -> onBackPressed());
 
-        setTitle(mName);
-        collapsingToolbarLayout.setTitle(mName);
+        setTitle(mAlbumName);
+        collapsingToolbarLayout.setTitle(mAlbumName);
         //设置收缩前字体颜色
         collapsingToolbarLayout.setExpandedTitleColor(UiUtils.getColor(R.color.white));
         //设置收缩后字体颜色
@@ -113,7 +145,7 @@ public class MusicActivity extends BaseActivity<MusicPresenter>
         //初始化RecyclerView
         LinearLayoutManager lm = new LinearLayoutManager(this);
         lm.setOrientation(RecyclerView.VERTICAL);
-        rvAdapter = new MusicRvAdapter(mName);
+        rvAdapter = new MusicRvAdapter(this, mAlbumName);
         rvAdapter.bindToRecyclerView(recyclerView);
         rvAdapter.setOnItemChildClickListener(this);
         rvAdapter.setEnableLoadMore(true);
@@ -142,6 +174,12 @@ public class MusicActivity extends BaseActivity<MusicPresenter>
             refreshLayout.setRefreshing(true);
             fetchData();
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        EventBus.getDefault().unregister(this);
     }
 
     private void fetchData() {
@@ -209,13 +247,44 @@ public class MusicActivity extends BaseActivity<MusicPresenter>
 
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
+        MusicBean.DataBean.ListBean bean = (MusicBean.DataBean.ListBean) adapter.getData().get(position);
+        switch (view.getId()) {
+            case R.id.rlItem:
+                Music m = new Music();
+                m.setM_id(bean.getId());
+                m.setAdd_time(DateUtils.getTime());
+                m.setCreate_time(bean.getCreate_time());
+                m.setName(bean.getName());
+                m.setPic(bean.getPic());
+                m.setSinger(bean.getSinger());
+                m.setUrl(bean.getUrl());
+                m.setAlbum(mAlbumName);
+                m.setAlbum_pic(mAlbumImg);
+                AudioPlayer.get(this).addAndPlay(m);
+                break;
+        }
 
     }
 
     @OnClick({R.id.llPlayAll, R.id.fabTop})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.llPlayAll:
+            case R.id.llPlayAll:        //播放全部
+                List<Music> list = new ArrayList<>();
+                for (MusicBean.DataBean.ListBean b : rvAdapter.getData()) {
+                    Music m = new Music();
+                    m.setM_id(b.getId());
+                    m.setAdd_time(DateUtils.getTime());
+                    m.setCreate_time(b.getCreate_time());
+                    m.setName(b.getName());
+                    m.setPic(b.getPic());
+                    m.setSinger(b.getSinger());
+                    m.setUrl(b.getUrl());
+                    m.setAlbum(mAlbumName);
+                    m.setAlbum_pic(mAlbumImg);
+                    list.add(m);
+                }
+                AudioPlayer.get(this).addAndPlay(list);
                 break;
             case R.id.fabTop:
                 recyclerView.smoothScrollToPosition(0);
