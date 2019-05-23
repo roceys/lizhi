@@ -1,12 +1,13 @@
 package ren.perry.lizhi.helper;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
-import android.widget.Toast;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 import ren.perry.lizhi.dao.DaoManager;
 import ren.perry.lizhi.dao.MusicDao;
 import ren.perry.lizhi.entity.Music;
@@ -19,6 +20,9 @@ import ren.perry.lizhi.event.PlayActionEvent;
  * WeChat  917351143
  */
 public class AudioPlayer {
+    @SuppressLint("StaticFieldLeak")
+    private static volatile AudioPlayer player;
+
     private MusicDao dao;
     private List<Music> musicList;
 
@@ -31,18 +35,25 @@ public class AudioPlayer {
     }
 
     public static AudioPlayer get(Context context) {
-        return new AudioPlayer(context);
+        if (player == null) {
+            synchronized (AudioPlayer.class) {
+                if (player == null) {
+                    player = new AudioPlayer(context);
+                }
+            }
+        }
+        return player;
     }
 
     private void toastShow(String msg) {
-        Toast.makeText(context, msg, Toast.LENGTH_SHORT).show();
+        Toasty.normal(context, msg).show();
     }
 
-    public void savePlayPosition(int position) {
+    private void savePlayPosition(int position) {
         MusicHelper.getInstance().savePosition(position);
     }
 
-    public int getPlayPosition() {
+    private int getPlayPosition() {
         int position = MusicHelper.getInstance().getPosition();
         if (position < 0 || position >= musicList.size()) {
             position = 0;
@@ -58,19 +69,6 @@ public class AudioPlayer {
         return musicList.get(getPlayPosition());
     }
 
-    public Music getNextMusic() {
-        if (musicList.isEmpty()) {
-            return null;
-        }
-        int position = getPlayPosition() + 1;
-        if (position < 0) {
-            position = musicList.size() - 1;
-        } else if (position >= musicList.size()) {
-            position = 0;
-        }
-        return musicList.get(position);
-    }
-
     private void play(int position, int action) {
         if (musicList.isEmpty()) {
             toastShow("当前播放列表没有音乐");
@@ -83,6 +81,11 @@ public class AudioPlayer {
         }
         savePlayPosition(position);
         PlayActionEvent event = new PlayActionEvent(action);
+        EventBus.getDefault().post(event);
+    }
+
+    public void playOrPause() {
+        PlayActionEvent event = new PlayActionEvent(PlayActionEvent.ACTION_PLAY_OR_PAUSE);
         EventBus.getDefault().post(event);
     }
 
@@ -102,24 +105,56 @@ public class AudioPlayer {
     }
 
     public void addAndPlay(Music music) {
-        int position = musicList.indexOf(music);
-        if (position < 0) {
+        int position = add(music);
+        play(position, PlayActionEvent.ACTION_PLAY_ADD);
+    }
+
+    public int add(Music music) {
+        boolean isExist = false;
+        int position = 0;
+        for (int i = 0; i < musicList.size(); i++) {
+            Music m = musicList.get(i);
+            if (music.getM_id() == m.getM_id()) {
+                isExist = true;
+                position = i;
+            }
+        }
+        if (!isExist) {
             musicList.add(music);
             dao.insert(music);
             position = musicList.size() - 1;
         }
-        play(position, PlayActionEvent.ACTION_PLAY_ADD);
+        return position;
+    }
+
+    public void playNext() {
+        playNext(false);
     }
 
     /**
      * 播放下一首
+     *
+     * @param isAuto 是否是程序自动的
      */
-    public void playNext() {
+    public void playNext(boolean isAuto) {
         if (musicList.isEmpty()) {
             toastShow("当前播放列表没有音乐");
             return;
         }
-        play(getPlayPosition() + 1, PlayActionEvent.ACTION_PLAY_NEXT);
+
+        int position = getPlayPosition();
+        if (isAuto) {
+            switch (MusicHelper.getInstance().getLoopMode()) {
+                case MusicHelper.LOOP_MODE_SINGLE:
+                    break;
+                case MusicHelper.LOOP_MODE_LIST_LOOP:
+                    position += 1;
+                    break;
+            }
+        } else {
+            position += 1;
+        }
+        play(position, PlayActionEvent.ACTION_PLAY_NEXT);
     }
 
     /**

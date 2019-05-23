@@ -1,6 +1,7 @@
 package ren.perry.lizhi.api;
 
 import ren.perry.lizhi.app.Constants;
+import ren.perry.lizhi.bean.AboutBean;
 import ren.perry.lizhi.bean.AlbumBean;
 import ren.perry.lizhi.bean.BannerBean;
 import ren.perry.lizhi.bean.MusicBean;
@@ -24,6 +25,9 @@ public interface ApiService {
     @POST(Constants.Api.module + "/version")
     @FormUrlEncoded
     Observable<VersionBean> version(@Field("appId") String appId);
+
+    @POST(Constants.Api.module + "/about")
+    Observable<AboutBean> about();
 
     @POST(Constants.Api.module + "/banner")
     Observable<BannerBean> banner();

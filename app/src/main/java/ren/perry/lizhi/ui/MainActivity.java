@@ -4,6 +4,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Handler;
 import android.os.IBinder;
@@ -88,7 +89,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
     RelativeLayout llBar;
 
     private ServiceConnection serviceConnection;
-    private PlayService.MyBinder myBinder;
+    private PlayService.MyBinder binder;
 
     @Subscribe
     public void onPlayEvent(PlayActionEvent event) {
@@ -100,7 +101,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 play();
                 break;
             case PlayActionEvent.ACTION_PLAY_PAUSE:         //暂停后的播放
-                myBinder.play();
+                binder.play();
                 ibBarPlay.setSelected(true);
                 break;
             case PlayActionEvent.ACTION_PLAY_NEXT:          //下一曲
@@ -110,7 +111,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 play();
                 break;
             case PlayActionEvent.ACTION_PAUSE:              //暂停
-                myBinder.pause();
+                binder.pause();
                 ibBarPlay.setSelected(false);
                 break;
             case PlayActionEvent.ACTION_STOP:               //停止
@@ -122,12 +123,12 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 int position = MusicHelper.getInstance().getPosition();
                 //保存position为下一曲
                 MusicHelper.getInstance().savePosition(position + 1);
-                if (myBinder.isPlaying()) {
+                if (binder.isPlaying()) {
                     //播放下一曲
                     PlayActionEvent e = new PlayActionEvent(PlayActionEvent.ACTION_PLAY_NEXT);
                     EventBus.getDefault().post(e);
                 } else {
-                    myBinder.getPlayer().reset();
+                    binder.getPlayer().reset();
                     loadBar(AudioPlayer.get(this).getPlayMusic(), false);
                 }
                 break;
@@ -136,6 +137,17 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 int current = event.getCurrentProgress();
                 pbBar.setMax(total);
                 pbBar.setProgress(current);
+                break;
+            case PlayActionEvent.ACTION_PLAY_OR_PAUSE:      //播放或暂停
+                if (binder.getPlayer().isPlaying()) {
+                    AudioPlayer.get(this).pause();
+                } else {
+                    if (AudioPlayer.get(this).getPlayMusic() != null) {
+                        AudioPlayer.get(this).playFromPause();
+                    } else {
+                        toastShow("当前播放列表没有音乐");
+                    }
+                }
                 break;
         }
     }
@@ -148,6 +160,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
             tvBarBottom.setText(infoStr);
             new GlideMan.Builder()
                     .load(music.getPic())
+                    .dotAnimation()
                     .circle()
                     .loadingRes(R.drawable.default_cover)
                     .loadFailRes(R.drawable.default_cover)
@@ -160,14 +173,18 @@ public class MainActivity extends BaseActivity<MainPresenter>
     }
 
     private void play() {
+        play(true);
+    }
+
+    private void play(boolean isNow) {
         Music music = AudioPlayer.get(this).getPlayMusic();
-        myBinder.setDataSource(music);
-        myBinder.setOnPreparedListener(mp -> {
-            myBinder.setOnCompletionListener(MainActivity.this);
-            myBinder.setOnErrorListener(MainActivity.this);
-            myBinder.play();
+        binder.setDataSource(music);
+        binder.setOnPreparedListener(mp -> {
+            binder.setOnCompletionListener(MainActivity.this);
+            binder.setOnErrorListener(MainActivity.this);
+            if (isNow) binder.play();
         });
-        loadBar(music, true);
+        loadBar(music, isNow);
     }
 
     @Override
@@ -204,22 +221,21 @@ public class MainActivity extends BaseActivity<MainPresenter>
     }
 
     private void initPlayerService() {
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
         serviceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(ComponentName name, IBinder service) {
-                myBinder = (PlayService.MyBinder) service;
+                binder = (PlayService.MyBinder) service;
+                play(false);
             }
 
             @Override
             public void onServiceDisconnected(ComponentName name) {
-
             }
         };
 
         Intent playServiceIntent = new Intent(this, PlayService.class);
         bindService(playServiceIntent, serviceConnection, BIND_AUTO_CREATE);
-
-        loadBar(AudioPlayer.get(this).getPlayMusic(), false);
     }
 
     private void initFragment() {
@@ -230,8 +246,8 @@ public class MainActivity extends BaseActivity<MainPresenter>
         titles.add("歌单");
         fragments.add(AlbumFragment.getInstance());
         //-----------------
-//        titles.add("关于");
-//        fragments.add();
+        titles.add("关于");
+        fragments.add(AboutFragment.getInstance());
         //=================================================
 
         PageAdapter pageAdapter = new PageAdapter(getSupportFragmentManager());
@@ -266,6 +282,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     private void initBannerView() {
         bannerView.setImageLoader(new GlideImageLoader());
+        bannerView.setBannerStyle(BannerConfig.CIRCLE_INDICATOR_TITLE_INSIDE);
         bannerView.setBannerAnimation(Transformer.Accordion);
         bannerView.setDelayTime(5000);
         bannerView.setIndicatorGravity(BannerConfig.CENTER);
@@ -332,6 +349,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
     protected void onDestroy() {
         super.onDestroy();
         EventBus.getDefault().unregister(this);
+        binder.close();
         unbindService(serviceConnection);
     }
 
@@ -345,8 +363,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
         switch (view.getId()) {
             case R.id.ibBarPlay:
                 if (ibBarPlay.isSelected()) {
-                    ibBarPlay.setSelected(false);
-                    myBinder.pause();
+                    AudioPlayer.get(this).pause();
                 } else {
                     if (AudioPlayer.get(this).getPlayMusic() != null) {
                         AudioPlayer.get(this).playFromPause();
@@ -363,7 +380,7 @@ public class MainActivity extends BaseActivity<MainPresenter>
                 break;
             case R.id.llBar:
                 Intent intent = new Intent(this, PlayerActivity.class);
-                intent.putExtra("isPlaying", myBinder.isPlaying());
+                intent.putExtra("isPlaying", binder.isPlaying());
                 startActivity(intent);
                 break;
         }
@@ -372,13 +389,13 @@ public class MainActivity extends BaseActivity<MainPresenter>
     @Override
     public void onCompletion(MediaPlayer mp) {
         ibBarPlay.setSelected(false);
-        AudioPlayer.get(this).playNext();
+        AudioPlayer.get(this).playNext(true);
     }
 
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         toastShow("播放失败");
-        new Handler().postDelayed(() -> AudioPlayer.get(this).playNext(), 1000);
+        new Handler().postDelayed(() -> AudioPlayer.get(this).playNext(true), 1000);
         return false;
     }
 }

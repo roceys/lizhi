@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -248,19 +249,32 @@ public class MusicActivity extends BaseActivity<MusicPresenter>
     @Override
     public void onItemChildClick(BaseQuickAdapter adapter, View view, int position) {
         MusicBean.DataBean.ListBean bean = (MusicBean.DataBean.ListBean) adapter.getData().get(position);
+        Music m = new Music();
+        m.setM_id(bean.getId());
+        m.setAdd_time(DateUtils.getTime());
+        m.setCreate_time(bean.getCreate_time());
+        m.setName(bean.getName());
+        m.setPic(bean.getPic());
+        m.setSinger(bean.getSinger());
+        m.setUrl(bean.getUrl());
+        m.setAlbum(mAlbumName);
+        m.setAlbum_pic(mAlbumImg);
         switch (view.getId()) {
             case R.id.rlItem:
-                Music m = new Music();
-                m.setM_id(bean.getId());
-                m.setAdd_time(DateUtils.getTime());
-                m.setCreate_time(bean.getCreate_time());
-                m.setName(bean.getName());
-                m.setPic(bean.getPic());
-                m.setSinger(bean.getSinger());
-                m.setUrl(bean.getUrl());
-                m.setAlbum(mAlbumName);
-                m.setAlbum_pic(mAlbumImg);
                 AudioPlayer.get(this).addAndPlay(m);
+                Intent intent = new Intent(this, PlayerActivity.class);
+                intent.putExtra("isPlaying", true);
+                startActivity(intent);
+                break;
+            case R.id.ibMore:
+                new MaterialDialog.Builder(this)
+                        .items("添加到播放列表")
+                        .itemsCallback((dialog, itemView, position1, text) -> {
+                            if (position1 == 0) {
+                                AudioPlayer.get(this).add(m);
+                                toastShow("已添加到播放列表");
+                            }
+                        }).show();
                 break;
         }
 

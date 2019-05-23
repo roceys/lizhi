@@ -206,7 +206,7 @@ public class PlayListActivity extends BaseActivity<PlayPresenter>
                 break;
             case R.id.ibMore:
                 new MaterialDialog.Builder(this)
-                        .items("移除此歌曲")
+                        .items("从列表中移除")
                         .itemsCallback((dialog, itemView, position1, text) -> {
                             if (position1 == 0) {
                                 AudioPlayer.get(this).delete(position);

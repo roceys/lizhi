@@ -26,27 +26,18 @@
 
     </RelativeLayout>
 
-    <ren.perry.lizhi.view.CircularMusicProgressBar
-        android:id="@+id/pb"
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
-        android:layout_marginStart="@dimen/dp_16"
-        android:layout_marginTop="@dimen/toolbar_height"
-        android:layout_marginEnd="@dimen/dp_16"
-        android:src="@drawable/default_cover"
-        app:border_color="@color/app_color_dark"
-        app:border_width="2dp"
-        app:centercircle_diammterer=".97"
-        app:draw_anticlockwise="false"
-        app:enable_touch="true"
-        app:progress_color="#80CBC4"
-        app:progress_startAngle="-90" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.2" />
 
     <TextView
         android:id="@+id/tvName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
         android:gravity="center"
         android:text="歌曲名"
         android:textColor="@android:color/primary_text_dark"
@@ -57,31 +48,103 @@
         android:id="@+id/tvInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
         android:layout_marginTop="@dimen/dp_6"
+        android:layout_marginEnd="@dimen/dp_16"
         android:gravity="center"
         android:text="歌手名"
         android:textColor="@android:color/primary_text_dark"
         android:textSize="16sp" />
 
-    <LinearLayout
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.3" />
+
+    <ren.perry.lizhi.view.CircularMusicProgressBar
+        android:id="@+id/pb"
+        android:layout_width="260dp"
+        android:layout_height="260dp"
+        android:layout_gravity="center_horizontal"
+        android:src="@drawable/default_cover"
+        app:border_color="@color/app_color_dark"
+        app:border_width="2dp"
+        app:centercircle_diammterer=".97"
+        app:draw_anticlockwise="false"
+        app:enable_touch="false"
+        app:progress_color="#80CBC4"
+        app:progress_startAngle="-90" />
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.2" />
+
+    <TextView
+        android:id="@+id/tvDuration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
         android:gravity="center"
-        android:orientation="horizontal"
-        android:padding="@dimen/dp_20">
+        android:text="0 / 0"
+        android:textColor="@color/white"
+        android:textSize="@dimen/sp_14" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.3" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <ImageButton
             android:id="@+id/ibLoop"
-            android:layout_width="@dimen/dp_64"
-            android:layout_height="@dimen/dp_64"
+            android:layout_width="@dimen/toolbar_height"
+            android:layout_height="@dimen/toolbar_height"
             android:background="?android:attr/actionBarItemBackground"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_repeat_black_24dp" />
+            android:src="@drawable/play_view_btn_repeat_selector" />
+
+        <View
+            android:layout_width="@dimen/dp_32"
+            android:layout_height="@dimen/dp_0" />
+
+
+        <ImageButton
+            android:id="@+id/ibList"
+            android:layout_width="@dimen/toolbar_height"
+            android:layout_height="@dimen/toolbar_height"
+            android:background="?android:attr/actionBarItemBackground"
+            android:contentDescription="@string/app_name"
+            android:src="@drawable/ic_playlist_play_black_24dp" />
+
+    </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.2" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/dp_16"
+        android:layout_marginEnd="@dimen/dp_16"
+        android:gravity="center"
+        android:orientation="horizontal">
 
         <View
             android:layout_width="0dp"
@@ -90,11 +153,12 @@
 
         <ImageButton
             android:id="@+id/ibPrev"
-            android:layout_width="@dimen/dp_64"
-            android:layout_height="@dimen/dp_64"
+            android:layout_width="@dimen/toolbar_height"
+            android:layout_height="@dimen/toolbar_height"
             android:background="?android:attr/actionBarItemBackground"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_fast_rewind_black_24dp" />
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_skip_previous_black_48dp" />
 
         <View
             android:layout_width="0dp"
@@ -103,10 +167,11 @@
 
         <ImageButton
             android:id="@+id/ibPlay"
-            android:layout_width="@dimen/dp_64"
-            android:layout_height="@dimen/dp_64"
+            android:layout_width="@dimen/toolbar_height"
+            android:layout_height="@dimen/toolbar_height"
             android:background="?android:attr/actionBarItemBackground"
             android:contentDescription="@string/app_name"
+            android:scaleType="centerInside"
             android:src="@drawable/play_view_btn_play_pause_selector" />
 
         <View
@@ -116,24 +181,12 @@
 
         <ImageButton
             android:id="@+id/ibNext"
-            android:layout_width="@dimen/dp_64"
-            android:layout_height="@dimen/dp_64"
+            android:layout_width="@dimen/toolbar_height"
+            android:layout_height="@dimen/toolbar_height"
             android:background="?android:attr/actionBarItemBackground"
             android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_fast_forward_black_24dp" />
-
-        <View
-            android:layout_width="0dp"
-            android:layout_height="1dp"
-            android:layout_weight="1" />
-
-        <ImageButton
-            android:id="@+id/ibList"
-            android:layout_width="@dimen/dp_64"
-            android:layout_height="@dimen/dp_64"
-            android:background="?android:attr/actionBarItemBackground"
-            android:contentDescription="@string/app_name"
-            android:src="@drawable/ic_playlist_play_black_24dp" />
+            android:scaleType="centerInside"
+            android:src="@drawable/ic_skip_next_black_48dp" />
 
         <View
             android:layout_width="0dp"
@@ -141,5 +194,11 @@
             android:layout_weight="1" />
 
     </LinearLayout>
+
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_gravity="center"
+        android:layout_weight="0.5" />
 
 </LinearLayout>

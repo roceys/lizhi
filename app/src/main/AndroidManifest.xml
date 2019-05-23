@@ -8,7 +8,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
@@ -20,6 +20,47 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning,UnusedAttribute">
+
+        <!--适配全面屏-->
+        <meta-data
+            android:name="android.max_aspect"
+            android:value="2.4" />
+        <!--适配华为（huawei）刘海屏-->
+        <meta-data
+            android:name="android.notch_support"
+            android:value="true" />
+        <!--适配小米（xiaomi）刘海屏-->
+        <meta-data
+            android:name="notch.config"
+            android:value="portrait|landscape" />
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <service android:name="ren.perry.lizhi.service.PlayService" />
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <receiver android:name="ren.perry.lizhi.receiver.MusicIntentReceiver">
+            <intent-filter android:priority="1000">
+                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
+                <action android:name="android.intent.action.MEDIA_BUTTON" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/rc_file_path" />
+        </provider>
+
+        <!-- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -->
 
         <activity
             android:name="ren.perry.lizhi.StartActivity"
@@ -50,21 +91,14 @@
             android:label="@string/AlbumDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.PlayListActivity"
+            android:name="ren.perry.lizhi.ui.PlayListActivity"
             android:label="@string/PlayListActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.PlayerActivity"
+            android:name="ren.perry.lizhi.ui.PlayerActivity"
             android:label="@string/PlayerActivity"
             android:screenOrientation="portrait" />
 
-        <service android:name="ren.perry.lizhi.service.PlayService" />
-
-        <receiver android:name=".receiver.MusicIntentReceiver">
-            <intent-filter>
-                <action android:name="android.media.AUDIO_BECOMING_NOISY" />
-            </intent-filter>
-        </receiver>
     </application>
 
 </manifest>

@@ -16,6 +16,8 @@ import ren.perry.lizhi.R;
 import ren.perry.lizhi.entity.Music;
 import ren.perry.lizhi.event.PlayActionEvent;
 import ren.perry.lizhi.helper.AudioPlayer;
+import ren.perry.lizhi.helper.MusicHelper;
+import ren.perry.lizhi.utils.DateUtils;
 import ren.perry.lizhi.utils.MathUtils;
 import ren.perry.lizhi.view.CircularMusicProgressBar;
 import ren.perry.mvplibrary.base.BaseActivity;
@@ -38,6 +40,10 @@ public class PlayerActivity extends BaseActivity {
     TextView tvInfo;
     @BindView(R.id.ibPlay)
     ImageButton ibPlay;
+    @BindView(R.id.ibLoop)
+    ImageButton ibLoop;
+    @BindView(R.id.tvDuration)
+    TextView tvDuration;
 
     @Subscribe
     public void onPlayEvent(PlayActionEvent event) {
@@ -69,8 +75,7 @@ public class PlayerActivity extends BaseActivity {
             case PlayActionEvent.ACTION_PROGRESS:           //播放进度
                 int total = event.getTotalProgress();
                 int current = event.getCurrentProgress();
-                float value = MathUtils.getPercentage(current, total);
-                pb.setValueWithNoAnimation(value);
+                setProgress(current, total);
                 break;
         }
     }
@@ -112,6 +117,28 @@ public class PlayerActivity extends BaseActivity {
         EventBus.getDefault().register(this);
         boolean isPlaying = getIntent().getBooleanExtra("isPlaying", false);
         loadUI(isPlaying);
+        switch (MusicHelper.getInstance().getLoopMode()) {
+            case MusicHelper.LOOP_MODE_LIST_LOOP:
+                ibLoop.setSelected(false);
+                break;
+            case MusicHelper.LOOP_MODE_SINGLE:
+                ibLoop.setSelected(true);
+                break;
+        }
+
+        int total = MusicHelper.getInstance().getTotalDuration();
+        int current = MusicHelper.getInstance().getCurrentDuration();
+        setProgress(current, total);
+    }
+
+    private void setProgress(int current, int total) {
+        float value = MathUtils.getPercentage(current, total);
+        pb.setValueWithNoAnimation(value);
+
+        String totalStr = DateUtils.formatDuration(total);
+        String currentStr = DateUtils.formatDuration(current);
+        String durationStr = currentStr + " / " + totalStr;
+        tvDuration.setText(durationStr);
     }
 
     @Override
@@ -133,7 +160,15 @@ public class PlayerActivity extends BaseActivity {
                 onBackPressed();
                 break;
             case R.id.ibLoop:
-                toastShow("列表循环");
+                if (ibLoop.isSelected()) {
+                    ibLoop.setSelected(false);
+                    MusicHelper.getInstance().saveLoopMode(MusicHelper.LOOP_MODE_LIST_LOOP);
+                    toastShow("列表循环");
+                } else {
+                    ibLoop.setSelected(true);
+                    MusicHelper.getInstance().saveLoopMode(MusicHelper.LOOP_MODE_SINGLE);
+                    toastShow("单曲循环");
+                }
                 break;
             case R.id.ibPrev:
                 AudioPlayer.get(this).playPrev();

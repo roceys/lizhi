@@ -20,7 +20,8 @@ public class PlayActionEvent {
     public static final int ACTION_STOP = 1007;             //停止
     public static final int ACTION_DELETE = 1008;           //删除
     public static final int ACTION_DELETE_AND_NEXT = 1009;  //删除
-    public static final int ACTION_PROGRESS = 1010;  //更新进度
+    public static final int ACTION_PROGRESS = 1010;         //更新进度
+    public static final int ACTION_PLAY_OR_PAUSE = 1011;    //播放或暂停
 
     public PlayActionEvent(int action) {
         this.action = action;

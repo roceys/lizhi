@@ -12,6 +12,8 @@ public class ConfigHelper {
 
     public static volatile ConfigHelper helper;
 
+    private static final String KEY_ABOUT_CONTENT = "key_about_content";
+
     private SpUtils spUtils;
 
     public static ConfigHelper getInstance() {
@@ -29,12 +31,12 @@ public class ConfigHelper {
         spUtils = new SpUtils(MyApp.getContext(), "config_helper");
     }
 
-    public void enableAutoPlay(boolean isAuto) {
-        spUtils.putBoolean("auto_play", isAuto);
+    public void saveAbout(String content) {
+        spUtils.putString(KEY_ABOUT_CONTENT, content);
     }
 
-    public boolean isAutoPlay() {
-        return spUtils.getBoolean("auto_play", false);
+    public String getAbout() {
+        return spUtils.getString(KEY_ABOUT_CONTENT, "");
     }
 
 

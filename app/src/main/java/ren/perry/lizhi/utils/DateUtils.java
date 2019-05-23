@@ -183,4 +183,21 @@ public class DateUtils {
         String now = sdf.format(new Date());//当前时间
         return param.equals(now);
     }
+
+    /**
+     * 将时间（毫秒）解析为字符串，格式为：hh:mm:ss 或 mm:ss
+     */
+    @SuppressLint("DefaultLocale")
+    public static String formatDuration(int duration) {
+        duration /= 1000;
+        int minute = duration / 60;
+        int hour = minute / 60;
+        minute %= 60;
+        int second = duration % 60;
+        if (hour != 0) {
+            return String.format("%2d:%02d:%02d", hour, minute, second);
+        } else {
+            return String.format("%02d:%02d", minute, second);
+        }
+    }
 }
