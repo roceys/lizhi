@@ -63,6 +63,15 @@
 -keep public class * extends android.support.v7.**
 -keep public class * extends android.support.annotation.**
 
+# androidx
+-keep class com.google.android.material.** {*;}
+-keep class androidx.** {*;}
+-keep public class * extends androidx.**
+-keep interface androidx.** {*;}
+-dontwarn com.google.android.material.**
+-dontnote com.google.android.material.**
+-dontwarn androidx.**
+
 # 保留R下面的资源
 -keep class **.R$* {*;}
 
@@ -316,3 +325,20 @@
 # ImmersionBar
 -keep class com.gyf.barlibrary.* {*;}
 -dontwarn com.gyf.barlibrary.**
+
+### greenDAO 3
+-keepclassmembers class * extends org.greenrobot.greendao.AbstractDao {
+public static java.lang.String TABLENAME;
+}
+-keep class **$Properties
+
+# If you do not use SQLCipher:
+-dontwarn org.greenrobot.greendao.database.**
+# If you do not use RxJava:
+-dontwarn rx.**
+
+### greenDAO 2
+-keepclassmembers class * extends de.greenrobot.dao.AbstractDao {
+public static java.lang.String TABLENAME;
+}
+-keep class **$Properties

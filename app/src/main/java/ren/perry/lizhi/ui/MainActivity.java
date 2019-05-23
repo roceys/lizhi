@@ -20,6 +20,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.allenliu.versionchecklib.v2.AllenVersionChecker;
 import com.allenliu.versionchecklib.v2.builder.DownloadBuilder;
 import com.allenliu.versionchecklib.v2.builder.UIData;
@@ -355,7 +356,13 @@ public class MainActivity extends BaseActivity<MainPresenter>
 
     @Override
     public void onBackPressed() {
-        finish();
+        new MaterialDialog.Builder(this)
+                .title("退出APP?")
+                .content("音乐也将停止哟~，要是想后台播放就按Home键吧")
+                .positiveText("退出APP")
+                .negativeText("取消")
+                .onPositive((dialog, which) -> super.onBackPressed())
+                .show();
     }
 
     @OnClick({R.id.ibBarPlay, R.id.ibBarNext, R.id.ibBarList, R.id.llBar})
